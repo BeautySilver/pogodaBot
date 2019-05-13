@@ -29,7 +29,7 @@ bot.onText(/start/,(msg)=>{
       "You can use the command /next or press the button to see a weather forecast for the day after tomorrow", {
       reply_markup: {   
             resize_keyboard: true, 	     
-            keyboard: [["today", "tomorrow"], ["next","Details about today"]]
+            keyboard: [["today", "tomorrow"], ["next","Today's weather details"]]
            
             
         }
@@ -43,39 +43,65 @@ bot.onText(/today/, (msg) => {
   let $ = cheerio.load(res.body);
    
    let min_max  = $("#bd1 .temperature ").text();
-  
+    let date =$("#bd1 .day-link").text()+" "+$("#bd1 .date").text()+" "+$("#bd1 .month").text()+".";
    let current_temperature =  $(".today-temp").text(); 
-   let temperature = [$(".weatherDetails .temperature").text()].join("");
-
-   let temperatureSens = [$(".weatherDetails .temperatureSens").text()].join("");
-  let atmosphere_pressure = $(".gray").text();
-  let array_temperature = temperature.split(" ");
-  console.log(temperature);
-  console.log(array_temperature);
-  let array_temperatureSens = temperatureSens.split(" ");
  
   let weather=$("#bd1 .weatherIco").attr('title');
-  let data2 = [
-  ['0:00', '3:00', '6:00', '9:00', '12:00', '15:00', '18:00', '21:00'],
-    [array_temperature[1], array_temperature[2], array_temperature[3], array_temperature[4],array_temperature[5],array_temperature[6],array_temperature[7],array_temperature[8] ],
-    [array_temperatureSens[1], array_temperatureSens[2], array_temperatureSens[3], array_temperatureSens[4], array_temperatureSens[5], array_temperatureSens[6], array_temperatureSens[7], array_temperatureSens[8]]
-  ]	;
-   let output2 = table.table(data2,config);
-  
+  console.log(weather);
   console.log(typeof atmosphere_pressure);
-  let array =  atmosphere_pressure.split("  ");
+     let image;
+     if(weather ="Переменная облачность"){
+     	 image ="d200";
+     }
+     if(weather==="Переменная облачнсть, дождь, возможны грозы")
+     {
+     	 image = "d240";о
+     }
+     if(weather === "Облачно с прояснениями, дождь"){
+     	 image = "d320";
+     }
+     if(weather==="Облачно с прояснениями, дождь, грозы"){
+     	 image = "d340";
+     }
+     if(weather==="Облачно с прояснениями, мелкий дождь"){
+     	 image="d310";
+     }
+     console.log(image);
     console.log(min_max);
     const chatId = msg.chat.id;
-   bot.sendPhoto(chatId, "C:/Users/gubar/Desktop/bot/src/d240.gif");
-  bot.sendMessage(chatId, "Todays temperature:" + min_max+`\n`+weather);
-  bot.sendMessage(chatId, "Current temperature: " + current_temperature);
-  bot.sendMessage(chatId,"Atmosphere pressure for all day: "+array[0,8])
-  bot.sendMessage(chatId, output2);
+   bot.sendPhoto(chatId, "C:/Users/gubar/Desktop/bot/src/"+image+".gif");
+  bot.sendMessage(chatId,date +`\n` + min_max+`\n`+weather+"."+`\n`+"Текущая температура: " + current_temperature);
+ 
+ 
+  
 })
   
 });
 
+bot.onText(/Today's weather details/, (msg) => {
+	needle.get(URL,  function(err, res){
+  if (err) throw (err);
+   let $ = cheerio.load(res.body);
+   let atmosphere_pressure = $(".gray").text();
+	 let array =  atmosphere_pressure.split("  ");
+	  let temperature = [$(".weatherDetails .temperature").text()].join("");
+      let temperatureSens = [$(".weatherDetails .temperatureSens").text()].join("");
+	 let array_temperature = temperature.split(" ");
+	  let array_temperatureSens = temperatureSens.split(" ");
 
+      
+	 let data2 = [
+    [array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]  ],
+    [array_temperature[1], array_temperature[2], array_temperature[3], array_temperature[4],array_temperature[5],array_temperature[6],array_temperature[7],array_temperature[8] ],
+    [array_temperatureSens[1], array_temperatureSens[2], array_temperatureSens[3], array_temperatureSens[4], array_temperatureSens[5], array_temperatureSens[6], array_temperatureSens[7], array_temperatureSens[8]]
+  ]	;
+  let output2 = table.table(data2,config);
+	 const chatId = msg.chat.id;
+ bot.sendMessage(chatId,"Atmosphere pressure for all day: "+array[8]);
+ bot.sendMessage(chatId,"Temperature and temperature_sens for all day:"+`\n`+ output2);
+})
+
+});
 
 
 
