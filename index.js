@@ -47,16 +47,18 @@ bot.onText(/today/, (msg) => {
    let current_temperature =  $(".today-temp").text(); 
  
   let weather=$("#bd1 .weatherIco").attr('title');
-  console.log(weather);
+ 
   console.log(typeof atmosphere_pressure);
      let image;
-     if(weather ="Переменная облачность"){
+     if(weather ==="Переменная облачность")
+     {
      	 image ="d200";
      }
-     if(weather==="Переменная облачнсть, дождь, возможны грозы")
+     if(weather==="Переменная облачность, дождь, возможны грозы")
      {
-     	 image = "d240";о
+     	 image = "d240";
      }
+
      if(weather === "Облачно с прояснениями, дождь"){
      	 image = "d320";
      }
@@ -64,8 +66,9 @@ bot.onText(/today/, (msg) => {
      	 image = "d340";
      }
      if(weather==="Облачно с прояснениями, мелкий дождь"){
-     	 image="d310";
+     	 image = "d310";
      }
+     console.log(weather);
      console.log(image);
     console.log(min_max);
     const chatId = msg.chat.id;
