@@ -103,7 +103,7 @@ bot.onText(/Today's weather details/, (msg) => {
   let output2 = table.table(data2,config);
 	 const chatId = msg.chat.id;
  bot.sendMessage(chatId,"Атмосферное давление на весь день: "+array[8]);
- bot.sendMessage(chatId,"Temperature and temperature_sens for all day:"+`\n`+ output2);
+ bot.sendMessage(chatId,"Температура и температура по ощущениям:"+`\n`+ output2);
 })
 
 });
