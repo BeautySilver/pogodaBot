@@ -5,7 +5,6 @@ const TelegramBot = require('node-telegram-bot-api');
 const token = '736488113:AAFus1qUVVwxXbBkw2BogvRP-_4kjoXkq_o';
 
 const bot = new TelegramBot(token, {polling: true});
-
 const axios = require('axios');
 const cheerio = require('cheerio');
 const needle = require('needle');
@@ -47,7 +46,7 @@ bot.onText(/today/, (msg) => {
    let current_temperature =  $(".today-temp").text(); 
  
   let weather=$("#bd1 .weatherIco").attr('title');
- 
+  
   console.log(typeof atmosphere_pressure);
      let image;
      if(weather ==="Переменная облачность")
@@ -68,21 +67,23 @@ bot.onText(/today/, (msg) => {
      if(weather==="Облачно с прояснениями, мелкий дождь"){
      	 image = "d310";
      }
+       if(weather ==="Сплошная облачность"){
+     	image ="d400";
+     }
+
      console.log(weather);
      console.log(image);
     console.log(min_max);
     const chatId = msg.chat.id;
    bot.sendPhoto(chatId, "C:/Users/gubar/Desktop/bot/src/"+image+".gif");
   bot.sendMessage(chatId,date +`\n` + min_max+`\n`+weather+"."+`\n`+"Текущая температура: " + current_temperature);
- 
- 
-  
+
 })
   
 });
 
 bot.onText(/Today's weather details/, (msg) => {
-	needle.get(URL,  function(err, res){
+	needle.get(URL,  function  on(err, res){
   if (err) throw (err);
    let $ = cheerio.load(res.body);
    let atmosphere_pressure = $(".gray").text();
@@ -92,7 +93,8 @@ bot.onText(/Today's weather details/, (msg) => {
 	 let array_temperature = temperature.split(" ");
 	  let array_temperatureSens = temperatureSens.split(" ");
 
-      
+     
+    
 	 let data2 = [
     [array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7]  ],
     [array_temperature[1], array_temperature[2], array_temperature[3], array_temperature[4],array_temperature[5],array_temperature[6],array_temperature[7],array_temperature[8] ],
@@ -100,14 +102,106 @@ bot.onText(/Today's weather details/, (msg) => {
   ]	;
   let output2 = table.table(data2,config);
 	 const chatId = msg.chat.id;
- bot.sendMessage(chatId,"Atmosphere pressure for all day: "+array[8]);
+ bot.sendMessage(chatId,"Атмосферное давление на весь день: "+array[8]);
  bot.sendMessage(chatId,"Temperature and temperature_sens for all day:"+`\n`+ output2);
 })
 
 });
 
 
+bot.onText(/tomorrow/, (msg) => {
+	needle.get(URL,  function(err, res){
+  if (err) throw (err);
 
+  let $ = cheerio.load(res.body);
+
+   let min_max  = $("#bd2 .temperature ").text();
+    let date =$("#bd2 .day-link").text()+" "+$("#bd2 .date").text()+" "+$("#bd2 .month").text()+".";
+    
+ 
+  let weather=$("#bd2 .weatherIco").attr('title');
+  
+  console.log(typeof atmosphere_pressure);
+     let image;
+     if(weather ==="Переменная облачность")
+     {
+     	 image ="d200";
+     }
+     if(weather==="Переменная облачность, дождь, возможны грозы")
+     {
+     	 image = "d240";
+     }
+
+     if(weather === "Облачно с прояснениями, дождь"){
+     	 image = "d320";
+     }
+     if(weather==="Облачно с прояснениями, дождь, грозы"){
+     	 image = "d340";
+     }
+     if(weather==="Облачно с прояснениями, мелкий дождь"){
+     	 image = "d310";
+     }
+     if(weather ==="Сплошная облачность"){
+     	image ="d400";
+     }
+
+     console.log(weather);
+     console.log(image);
+    console.log(min_max);
+    const chatId = msg.chat.id;
+   bot.sendPhoto(chatId, "C:/Users/gubar/Desktop/bot/src/"+image+".gif");
+  bot.sendMessage(chatId,date +`\n` + min_max+`\n`+weather+".");
+
+})
+  
+});
+
+bot.onText(/next/, (msg) => {
+	needle.get(URL,  function(err, res){
+  if (err) throw (err);
+
+  let $ = cheerio.load(res.body);
+
+   let min_max  = $("#bd3 .temperature ").text();
+    let date =$("#bd3 .day-link").text()+" "+$("#bd3 .date").text()+" "+$("#bd3 .month").text()+".";
+    
+ 
+  let weather=$("#bd3 .weatherIco").attr('title');
+  
+  console.log(typeof atmosphere_pressure);
+     let image;
+     if(weather ==="Переменная облачность")
+     {
+     	 image ="d200";
+     }
+     if(weather==="Переменная облачность, дождь, возможны грозы")
+     {
+     	 image = "d240";
+     }
+
+     if(weather === "Облачно с прояснениями, дождь"){
+     	 image = "d320";
+     }
+     if(weather==="Облачно с прояснениями, дождь, грозы"){
+     	 image = "d340";
+     }
+     if(weather==="Облачно с прояснениями, мелкий дождь"){
+     	 image = "d310";
+     }
+     if(weather ==="Сплошная облачность"){
+     	image ="d400";
+     }
+
+     console.log(weather);
+     console.log(image);
+    console.log(min_max);
+    const chatId = msg.chat.id;
+   bot.sendPhoto(chatId, "C:/Users/gubar/Desktop/bot/src/"+image+".gif");
+  bot.sendMessage(chatId,date +`\n` + min_max+`\n`+weather+".");
+
+})
+  
+});
 
 
  
